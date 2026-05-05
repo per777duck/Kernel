@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 9cd4f505ab274b3282ae2ec8d5d5e1fd
+timeCreated: 1725972198
+AssetOrigin:
+  serializedVersion: 1
+  productId: 295837
+  packageName: Step Height Controller
+  packageVersion: 1.0.0
+  assetPath: Assets/StepHeightSystem/Scripts/Movement/StepHeight/ColliderManager.cs
+  uploadId: 692078

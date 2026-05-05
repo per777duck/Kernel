@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f8b84d716b0717f4094da61b5fb64dc2
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 295837
+  packageName: Step Height Controller
+  packageVersion: 1.0.0
+  assetPath: Assets/StepHeightSystem/StepHeight_System_ReadMe.txt
+  uploadId: 692078

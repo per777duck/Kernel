@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 96c90cc500324a8794b6f1afae545790
+timeCreated: 1725972173
+AssetOrigin:
+  serializedVersion: 1
+  productId: 295837
+  packageName: Step Height Controller
+  packageVersion: 1.0.0
+  assetPath: Assets/StepHeightSystem/Scripts/Movement/StepHeight/IMovementInputManager.cs
+  uploadId: 692078

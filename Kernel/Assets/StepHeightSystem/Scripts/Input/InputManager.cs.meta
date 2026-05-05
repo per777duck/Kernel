@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 43fa6524a5dcdc34b9661318567d31f4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: -50
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 295837
+  packageName: Step Height Controller
+  packageVersion: 1.0.0
+  assetPath: Assets/StepHeightSystem/Scripts/Input/InputManager.cs
+  uploadId: 692078

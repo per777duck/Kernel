@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ab66cb4ae9c84bb4597a4fd6c45448cf
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 295837
+  packageName: Step Height Controller
+  packageVersion: 1.0.0
+  assetPath: Assets/StepHeightSystem/Prefabs/Player.prefab
+  uploadId: 692078

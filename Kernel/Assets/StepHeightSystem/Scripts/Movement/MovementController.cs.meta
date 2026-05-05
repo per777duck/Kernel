@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 50246fb6365680a48aca46e48a49a65a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 295837
+  packageName: Step Height Controller
+  packageVersion: 1.0.0
+  assetPath: Assets/StepHeightSystem/Scripts/Movement/MovementController.cs
+  uploadId: 692078

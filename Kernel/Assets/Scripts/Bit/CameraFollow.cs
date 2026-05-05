@@ -43,9 +43,6 @@ namespace Bit.Robot
 
             if (target != null)
             {
-                if (target.GetComponent<PlayerController3D>() == null)
-                    target.gameObject.AddComponent<PlayerController3D>();
-
                 _smoothedPivot = target.position + targetPivotOffset;
             }
         }

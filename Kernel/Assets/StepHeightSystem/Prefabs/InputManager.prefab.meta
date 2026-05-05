@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 04d135ae278d71d47aaad5583dfefb12
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 295837
+  packageName: Step Height Controller
+  packageVersion: 1.0.0
+  assetPath: Assets/StepHeightSystem/Prefabs/InputManager.prefab
+  uploadId: 692078

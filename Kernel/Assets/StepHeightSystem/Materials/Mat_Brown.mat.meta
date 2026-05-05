@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 31b064303ffdeec499f3a20e5d50acf8
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 295837
+  packageName: Step Height Controller
+  packageVersion: 1.0.0
+  assetPath: Assets/StepHeightSystem/Materials/Mat_Brown.mat
+  uploadId: 692078

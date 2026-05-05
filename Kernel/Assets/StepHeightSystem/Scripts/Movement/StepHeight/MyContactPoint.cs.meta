@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: f9cda3aed73d407b9ce3ec4d11a5ee47
+timeCreated: 1725972142
+AssetOrigin:
+  serializedVersion: 1
+  productId: 295837
+  packageName: Step Height Controller
+  packageVersion: 1.0.0
+  assetPath: Assets/StepHeightSystem/Scripts/Movement/StepHeight/MyContactPoint.cs
+  uploadId: 692078

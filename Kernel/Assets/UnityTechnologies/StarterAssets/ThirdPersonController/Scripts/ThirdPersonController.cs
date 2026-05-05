@@ -86,6 +86,8 @@ namespace StarterAssets
         private float _rotationVelocity;
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
+        private Vector3 _externalVelocity;
+        private float _externalAirborneTimer;
 
         // timeout deltatime
         private float _jumpTimeoutDelta;
@@ -269,7 +271,11 @@ namespace StarterAssets
 
             // move the player
             _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
-                             new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+                             new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime +
+                             _externalVelocity * Time.deltaTime);
+
+            // Decay externally applied horizontal impulse (e.g. trampoline bounce).
+            _externalVelocity = Vector3.MoveTowards(_externalVelocity, Vector3.zero, SpeedChangeRate * Time.deltaTime);
 
             // update animator if using character
             if (_hasAnimator)
@@ -281,6 +287,15 @@ namespace StarterAssets
 
         private void JumpAndGravity()
         {
+            if (Grounded)
+            {
+                if (_externalAirborneTimer > 0.0f)
+                {
+                    _externalAirborneTimer -= Time.deltaTime;
+                    Grounded = false;
+                }
+            }
+
             if (Grounded)
             {
                 // reset the fall timeout timer
@@ -386,6 +401,24 @@ namespace StarterAssets
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
+            }
+        }
+
+        public float VerticalVelocity => _verticalVelocity;
+
+        public void ExternalLaunch(Vector3 launchVelocity)
+        {
+            if (launchVelocity.y > _verticalVelocity)
+                _verticalVelocity = launchVelocity.y;
+
+            _externalVelocity = new Vector3(launchVelocity.x, 0.0f, launchVelocity.z);
+            _fallTimeoutDelta = 0.0f;
+            _externalAirborneTimer = 0.15f;
+
+            if (_hasAnimator)
+            {
+                _animator.SetBool(_animIDJump, true);
+                _animator.SetBool(_animIDFreeFall, false);
             }
         }
     }

@@ -1,0 +1,10 @@
+fileFormatVersion: 2
+guid: 8d3b96972bc34c6b8e8b353514b59437
+timeCreated: 1725972180
+AssetOrigin:
+  serializedVersion: 1
+  productId: 295837
+  packageName: Step Height Controller
+  packageVersion: 1.0.0
+  assetPath: Assets/StepHeightSystem/Scripts/Movement/StepHeight/RigidbodyWrapper.cs
+  uploadId: 692078

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 58cec1cfe66f40e479505d51a97bc7c9
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 295837
+  packageName: Step Height Controller
+  packageVersion: 1.0.0
+  assetPath: Assets/StepHeightSystem/Materials/Player_P_Mat.physicMaterial
+  uploadId: 692078
