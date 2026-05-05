@@ -13,24 +13,27 @@ namespace Bit.Robot
     public class PlayerController3D : MonoBehaviour
     {
         [Header("Movement")]
-        [SerializeField] private float moveSpeed = 6f;
-        [SerializeField] private float sprintSpeed = 10f;
+        [SerializeField] private float moveSpeed = 4.8f;
+        [SerializeField] private float sprintSpeed = 8f;
         [SerializeField] private float acceleration = 35f;
         [SerializeField] private float sprintAccelerationMultiplier = 1.25f;
         [SerializeField] private float rotationSpeed = 720f;
 
         [Header("Jump")]
-        [SerializeField] private float jumpForce = 7f;
+        [SerializeField] private float jumpForce = 5.8f;
+        [SerializeField] private float extraFallGravity = 28f;
 
         [Header("Ground")]
         [SerializeField] private LayerMask groundMask = ~0;
         [Tooltip("Луч от подошвы вниз: считаем землю, если попадание ближе этого расстояния (метры).")]
         [SerializeField] private float groundedRayLength = 0.85f;
-        [SerializeField] private float groundedMaxHitDistance = 0.55f;
+        [SerializeField] private float groundedMaxHitDistance = 0.4f;
         [SerializeField] private float footProbeLift = 0.07f;
-        [SerializeField] private float groundStickSkin = 0.05f;
+        [SerializeField] private float groundStickSkin = 0.02f;
         [SerializeField] private float groundStickPullAccel = 280f;
         [SerializeField] private float groundStickMaxPullSpeed = 8f;
+        [SerializeField] private float groundSnapMaxStep = 0.08f;
+        [SerializeField] private float groundSnapMinGap = 0.065f;
         [SerializeField] private bool snapFeetOnSpawn = true;
         [SerializeField] private float snapRayHeight = 12f;
         [SerializeField] private float snapSkin = 0.03f;
@@ -38,6 +41,9 @@ namespace Bit.Robot
 
         [Header("Body (no somersaults)")]
         [SerializeField] private bool lockPitchAndRoll = true;
+        [SerializeField] private Vector3 targetCapsuleCenter = new Vector3(0f, 0.93f, 0f);
+        [SerializeField] private float targetCapsuleRadius = 0.28f;
+        [SerializeField] private float targetCapsuleHeight = 1.8f;
 
         [Header("Animator (Starter Assets Kyle)")]
         [SerializeField] private bool driveAnimator = true;
@@ -83,10 +89,8 @@ namespace Bit.Robot
             if (!TryGetComponent(out _cap))
             {
                 _cap = gameObject.AddComponent<CapsuleCollider>();
-                _cap.center = new Vector3(0f, 0.93f, 0f);
-                _cap.radius = 0.28f;
-                _cap.height = 1.8f;
             }
+            NormalizeCapsuleToTarget();
 
             if (cameraTransform == null && Camera.main != null)
                 cameraTransform = Camera.main.transform;
@@ -103,6 +107,7 @@ namespace Bit.Robot
                 _animator = GetComponentInChildren<Animator>(true);
                 _hasAnimator = _animator != null;
             }
+
         }
 
         private void AssignAnimatorParameterIDs()
@@ -121,6 +126,7 @@ namespace Bit.Robot
 
             if (snapFeetOnSpawn)
                 StartCoroutine(SnapFeetAfterPhysics());
+
         }
 
         private IEnumerator SnapFeetAfterPhysics()
@@ -147,10 +153,17 @@ namespace Bit.Robot
 
             RaycastHit groundHit = default;
             bool found = false;
+            float bottomYBeforeSnap = _cap.bounds.min.y;
             foreach (RaycastHit h in hits)
             {
-                if (h.collider.attachedRigidbody == _rb)
+                if (IsSelfCollider(h.collider))
                     continue;
+
+                // Ignore any surface above character feet; we only want ground below.
+                if (h.point.y > bottomYBeforeSnap + 0.02f)
+                {
+                    continue;
+                }
 
                 groundHit = h;
                 found = true;
@@ -173,6 +186,7 @@ namespace Bit.Robot
                 if (Mathf.Abs(v.y) < 0.1f)
                     _rb.linearVelocity = new Vector3(v.x, 0f, v.z);
             }
+
         }
 
         private static void DetachTransformIfUnderCamera(Transform t)
@@ -303,9 +317,11 @@ namespace Bit.Robot
             float targetSpeed = sprint ? sprintSpeed : moveSpeed;
             float accel = sprint ? acceleration * sprintAccelerationMultiplier : acceleration;
             ApplyHorizontalMovement(moveDir, targetSpeed, accel);
+            ApplyExtraFallGravity();
 
             if (moveDir.sqrMagnitude > 0.0001f)
                 RotateTowards(moveDir);
+
         }
 
         private Vector3 GetCameraRelativeDirection(float horizontal, float vertical)
@@ -367,7 +383,7 @@ namespace Bit.Robot
             for (int i = 0; i < count; i++)
             {
                 RaycastHit h = RaycastHitsBuffer[i];
-                if (h.collider == null || h.collider.attachedRigidbody == _rb)
+                if (h.collider == null || IsSelfCollider(h.collider))
                     continue;
                 if (h.distance < closest)
                 {
@@ -388,6 +404,50 @@ namespace Bit.Robot
 
         private static readonly RaycastHit[] RaycastHitsBuffer = new RaycastHit[8];
 
+        private void NormalizeCapsuleToTarget()
+        {
+            if (_cap == null)
+                return;
+
+            bool changed = false;
+            if (Vector3.Distance(_cap.center, targetCapsuleCenter) > 0.001f)
+            {
+                _cap.center = targetCapsuleCenter;
+                changed = true;
+            }
+
+            if (Mathf.Abs(_cap.radius - targetCapsuleRadius) > 0.001f)
+            {
+                _cap.radius = targetCapsuleRadius;
+                changed = true;
+            }
+
+            if (Mathf.Abs(_cap.height - targetCapsuleHeight) > 0.001f)
+            {
+                _cap.height = targetCapsuleHeight;
+                changed = true;
+            }
+        }
+
+        private bool IsSelfCollider(Collider col)
+        {
+            if (col == null)
+                return true;
+
+            if (_rb != null && col.attachedRigidbody == _rb)
+                return true;
+
+            return col.transform == transform || col.transform.IsChildOf(transform);
+        }
+
+        private void ApplyExtraFallGravity()
+        {
+            if (_rb.linearVelocity.y < 0f)
+            {
+                _rb.AddForce(Vector3.down * extraFallGravity, ForceMode.Acceleration);
+            }
+        }
+
         private void ApplyGroundStick(bool grounded, RaycastHit hit)
         {
             if (!grounded || _cap == null)
@@ -400,6 +460,15 @@ namespace Bit.Robot
             if (gap <= 0f || gap > 0.42f)
                 return;
 
+            // Small downward snap keeps feet visually grounded on uneven surfaces.
+            float snapStep = 0f;
+            if (gap > groundSnapMinGap && _rb.linearVelocity.y <= 0f)
+                snapStep = Mathf.Min(gap, groundSnapMaxStep);
+            if (snapStep > 0f)
+            {
+                _rb.MovePosition(_rb.position + Vector3.down * snapStep);
+            }
+
             float force = Mathf.Clamp(gap * groundStickPullAccel, 0f, 950f);
             _rb.AddForce(Vector3.down * force, ForceMode.Acceleration);
 
@@ -409,6 +478,7 @@ namespace Bit.Robot
                 v.y = -groundStickMaxPullSpeed;
                 _rb.linearVelocity = v;
             }
+
         }
 
         private void RotateTowards(Vector3 moveDir)
